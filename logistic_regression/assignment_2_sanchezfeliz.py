@@ -82,41 +82,47 @@ class LogReg:
         print(f"Accuracy:      {accuracy:.4f}%")
 
 
-# Read in data into dataframe and rename column headers, only using:
-# column index 1: Diagnosis (1 Malignent or 0 Benign)
-# column index 2: Radius (mean distance from center to points on the perimeter)
-df = pd.read_csv('logistic_regression/wdbc.data', header=None, usecols=[1, 2])
-df = df.rename(columns={1: 'diagnosis', 2: 'radius'})
-df['diagnosis'] = df['diagnosis'].map({'B': 0, 'M': 1})
+def main():
+    # Read in data into dataframe and rename column headers, only using:
+    # column index 1: Diagnosis (1 Malignent or 0 Benign)
+    # column index 2: Radius (mean distance from center to the perimeter)
+    df = pd.read_csv('logistic_regression/wdbc.data',
+                     header=None, usecols=[1, 2])
+    df = df.rename(columns={1: 'diagnosis', 2: 'radius'})
+    df['diagnosis'] = df['diagnosis'].map({'B': 0, 'M': 1})
 
-# Seperate my independent and dependent variables
-X = df['radius']
-y = df['diagnosis']
+    # Seperate my independent and dependent variables
+    X = df['radius']
+    y = df['diagnosis']
 
-# Split the data into 70% training, 30% testing
-X_train, X_test, y_train, y_test = train_test_split(X, y,
-                                                    test_size=0.30,
-                                                    random_state=0)
+    # Split the data into 70% training, 30% testing
+    X_train, X_test, y_train, y_test = train_test_split(X, y,
+                                                        test_size=0.30,
+                                                        random_state=0)
 
-# Create a new logistic regression model
-cancer = LogReg(X_train, y_train)
+    # Create a new logistic regression model
+    cancer = LogReg(X_train, y_train)
 
-# Train the logistic regression model
-cancer.train_model()
+    # Train the logistic regression model
+    cancer.train_model()
 
-# Predict using the test values
-cancer.predict_stats(X_test, y_test)
+    # Predict using the test values
+    cancer.predict_stats(X_test, y_test)
 
-# Plotting the results
-plt.scatter(X_test, y_test, color='blue', label='Actual')
-plt.scatter(X_test, cancer.predict(X_test),
-            color='red', marker='x', label='Predicted')
-plt.yticks([0, 1])
-plt.title('Malignent Tumors Classified by Radius')
-plt.xlabel('Radius')
-plt.ylabel('Is Malignent')
-plt.legend()
-plt.show()
+    # Plotting the results
+    plt.scatter(X_test, y_test, color='blue', label='Actual')
+    plt.scatter(X_test, cancer.predict(X_test),
+                color='red', marker='x', label='Predicted')
+    plt.yticks([0, 1])
+    plt.title('Malignent Tumors Classified by Radius')
+    plt.xlabel('Radius')
+    plt.ylabel('Is Malignent')
+    plt.legend()
+    plt.show()
+
+
+if __name__ == "__main__":
+    main()
 
 """
 The data shows that we can get around as little as 10.5% accurate,
